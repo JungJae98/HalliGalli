@@ -3,6 +3,7 @@ package kr.co.company.halligalli;
 import java.util.Random;
 
 public class Card {
+    private int field_card = 0;
     private String card1 = "start"; //1번 플레이어의 카드
     private String card2 = "start"; //2번 플레이어의 카드
 
@@ -100,6 +101,15 @@ public class Card {
         return card2;
     }
 
+    public void addFieldCard(){
+        field_card++;
+        System.out.println(field_card);
+    }
+
+    public void resetFieldCard(){
+        field_card = 0;
+        System.out.println();
+    }
 
 
 }

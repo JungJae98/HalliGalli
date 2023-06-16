@@ -3,6 +3,8 @@ package kr.co.company.halligalli;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         
         p1_Tcard.setText(Integer.toString(setCardNum)); //세팅된 카드 숫자를 출력
 
+        BackgroundThread thread = new BackgroundThread();
+        thread.start();
         p1_cardView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 //                    card[0] = cardFilp; //
                 }
                 player1.desCardcount(); //카드수 1 감소
+                card.addFieldCard(); // 필드 카드수 증가
 
 
                 //카드 카운트가 0이 될 경우를 처리해야함
@@ -65,6 +70,80 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 // 과일 갯수의 합이 5일 경우
+                /*String card1 = card.getCard1();
+                String card2 = card.getCard2();
+                if ((card1.equals("banana1") && card2.equals("banana4"))
+                        || (card1.equals("banana2") && card2.equals("banana3"))
+                        || (card1.equals("banana3") && card2.equals("banana2"))
+                        || (card1.equals("banana4") && card2.equals("banana1"))
+                        || (card1.equals("plum1") && card2.equals("plum4"))
+                        || (card1.equals("plum2") && card2.equals("plum3"))
+                        || (card1.equals("plum3") && card2.equals("plum2"))
+                        || (card1.equals("plum4") && card2.equals("plum1"))
+                        || (card1.equals("lime1") && card2.equals("lime4"))
+                        || (card1.equals("lime2") && card2.equals("lime3"))
+                        || (card1.equals("lime3") && card2.equals("lime2"))
+                        || (card1.equals("lime4") && card2.equals("lime1"))
+                        || (card1.equals("strawberry1") && card2.equals("strawberry4"))
+                        || (card1.equals("strawberry2") && card2.equals("strawberry3"))
+                        || (card1.equals("strawberry3") && card2.equals("strawberry2"))
+                        || (card1.equals("strawberry4") && card2.equals("strawberry1"))
+                        || (card1.equals("banana5") && !(card2.equals("banana1") || card2.equals("banana2") || card2.equals("banana3") || card2.equals("banana4") || card2.equals("banana5")))
+                        || (card2.equals("banana5") && !(card1.equals("banana1") || card1.equals("banana2") || card1.equals("banana3") || card1.equals("banana4") || card1.equals("banana5")))
+                        || (card1.equals("plum5") && !(card2.equals("plum1") || card2.equals("plum2") || card2.equals("plum3") || card2.equals("plum4") || card2.equals("plum5")))
+                        || (card2.equals("plum5") && !(card1.equals("plum1") || card1.equals("plum2") || card1.equals("plum3") || card1.equals("plum4") || card1.equals("plum5")))
+                        || (card1.equals("lime5") && !(card2.equals("lime1") || card2.equals("lime2") || card2.equals("lime3") || card2.equals("lime4") || card2.equals("lime5")))
+                        || (card2.equals("lime5") && !(card1.equals("lime1") || card1.equals("lime2") || card1.equals("lime3") || card1.equals("lime4") || card1.equals("lime5")))
+                        || (card1.equals("strawberry5") && !(card2.equals("strawberry1") || card2.equals("strawberry2") || card2.equals("strawberry3") || card2.equals("strawberry4") || card2.equals("strawberry5")))
+                        || (card2.equals("strawberry5") && !(card1.equals("strawberry1") || card1.equals("strawberry2") || card1.equals("strawberry3") || card1.equals("strawberry4") || card1.equals("strawberry5")))
+                ) {
+                    System.out.println(card1 +" : " + card2 + "합이 5임");
+                    card.resetFieldCard();
+                        // 조건이 참일 때 실행할 코드
+                }*/
+
+                p1_cardView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            }
+        });
+
+        p2_cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String cardFilp = game.cardFilp();
+                // 이미지를 랜덤으로 불러서 가져옴
+                int imageResource = getResources().getIdentifier(cardFilp, "drawable", getPackageName());
+                if(imageResource != 0){
+                    p2_cardView.setImageResource(imageResource);
+                    card.setCard2(cardFilp);
+                }
+                player2.desCardcount(); //카드 수 1감소
+                card.addFieldCard(); // 필드 카드수 증가
+
+                //카드 카운트가 0이 될 경우를 처리해야 함
+                if(player2.getCardcount() != 0){
+                    //남은카드 텍스트 업데이트
+                    int newCard = player2.getCardcount();
+                    p2_Tcard.setText(Integer.toString(newCard));
+                }else{ //카드 카운트가 0이 될 경우
+                    //
+                    //
+                    //
+                    // 게임 종료에 관한 코드 작성이 필요
+                    //
+                    //
+                    //
+                    //
+                }
+
+                p2_cardView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            }
+        });
+    }
+
+    // 쓰레드를 이용하여 카드 조건을 확인
+    class BackgroundThread extends Thread{
+        public void run(){
+            while(true){
                 String card1 = card.getCard1();
                 String card2 = card.getCard2();
                 if ((card1.equals("banana1") && card2.equals("banana4"))
@@ -93,57 +172,26 @@ public class MainActivity extends AppCompatActivity {
                         || (card2.equals("strawberry5") && !(card1.equals("strawberry1") || card1.equals("strawberry2") || card1.equals("strawberry3") || card1.equals("strawberry4") || card1.equals("strawberry5")))
                 ) {
                     System.out.println(card1 +" : " + card2 + "합이 5임");
-                        // 조건이 참일 때 실행할 코드
+                    card.resetFieldCard();
+                    // 조건이 참일 때 실행할 코드
                 }
-
-
-
-
-
-
-                p1_cardView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                try{
+                    Thread.sleep(100);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
-        });
-
-        p2_cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String cardFilp = game.cardFilp();
-                // 이미지를 랜덤으로 불러서 가져옴
-                int imageResource = getResources().getIdentifier(cardFilp, "drawable", getPackageName());
-                if(imageResource != 0){
-                    p2_cardView.setImageResource(imageResource);
-                    card.setCard2(cardFilp);
-                }
-                player2.desCardcount(); //카드 수 1감소
-
-                //카드 카운트가 0이 될 경우를 처리해야 함
-                if(player2.getCardcount() != 0){
-                    //남은카드 텍스트 업데이트
-                    int newCard = player2.getCardcount();
-                    p2_Tcard.setText(Integer.toString(newCard));
-                }else{ //카드 카운트가 0이 될 경우
-                    //
-                    //
-                    //
-                    // 게임 종료에 관한 코드 작성이 필요
-                    //
-                    //
-                    //
-                    //
-                }
-
-
-
-
-
-                p2_cardView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            }
-        });
-
-
+        }
     }
 
+    //핸들러를 통해서 데이터를 제어할 예정
+    class MainHandler extends Handler{
+        @Override
+        public void handleMessage(Message msg){
+            super.handleMessage(msg);
 
-
+            Bundle bundle = msg.getData();
+        }
+    }
 }
+
