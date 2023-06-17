@@ -6,6 +6,8 @@ public class Game {
     private Player player1;
     private Player player2;
 
+    public int playerTurn = 0; //플레이어 턴을 체크
+
     // 카드의 타입을 정하는 함수
     private String cardType(){
         Random random = new Random();
@@ -67,17 +69,6 @@ public class Game {
                     cardFilp = "banana5";
                     break;
             }
-//            if(cardNumber() == 1){
-//                return cardFilp ="banana1";
-//            } else if (cardNumber() == 2) {
-//                return cardFilp ="banana2";
-//            } else if (cardNumber() == 3) {
-//                return cardFilp ="banana3";
-//            } else if (cardNumber() == 4) {
-//                return cardFilp ="banana4";
-//            } else if (cardNumber() == 5) {
-//                return cardFilp ="banana5";
-//            }
         }
         if(cardType == "berry"){
             switch(cardNumber){
@@ -97,17 +88,6 @@ public class Game {
                     cardFilp = "strawberry5";
                     break;
             }
-//            if(cardNumber() == 1){
-//                return cardFilp ="strawberry1";
-//            } else if (cardNumber() == 2) {
-//                return cardFilp ="strawberry2";
-//            } else if (cardNumber() == 3) {
-//                return cardFilp ="strawberry3";
-//            } else if (cardNumber() == 4) {
-//                return cardFilp ="strawberry4";
-//            } else if (cardNumber() == 5) {
-//                return cardFilp ="strawberry5";
-//            }
         }
         if(cardType == "plum"){
             switch(cardNumber){
@@ -127,17 +107,6 @@ public class Game {
                     cardFilp = "plum5";
                     break;
             }
-//            if(cardNumber() == 1){
-//                return cardFilp ="plum1";
-//            } else if (cardNumber() == 2) {
-//                return cardFilp ="plum2";
-//            } else if (cardNumber() == 3) {
-//                return cardFilp ="plum3";
-//            } else if (cardNumber() == 4) {
-//                return cardFilp ="plum4";
-//            } else if (cardNumber() == 5) {
-//                return cardFilp ="plum5";
-//            }
         }
         if(cardType == "lime"){
             switch(cardNumber){
@@ -157,18 +126,15 @@ public class Game {
                     cardFilp = "lime5";
                     break;
             }
-//            if(cardNumber() == 1){
-//                return cardFilp ="lime1";
-//            } else if (cardNumber() == 2) {
-//                return cardFilp ="lime2";
-//            } else if (cardNumber() == 3) {
-//                return cardFilp ="lime3";
-//            } else if (cardNumber() == 4) {
-//                return cardFilp ="lime4";
-//            } else if (cardNumber() == 5) {
-//                return cardFilp = "lime5";
-//            }
         }
         return cardFilp;
+    }
+
+    public void p1Turn(){
+        playerTurn = 1;
+    }
+
+    public void p2Turn(){
+        playerTurn = 0;
     }
 }

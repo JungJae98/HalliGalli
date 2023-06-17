@@ -46,8 +46,20 @@
             tools:layout_editor_absoluteY="42dp" />
 
         <ImageView
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:src="@drawable/bell"
+            android:alpha="0.3"
+            app:layout_constraintBottom_toBottomOf="@+id/p1_filed"
+            app:layout_constraintEnd_toEndOf="@+id/p1_filed"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/p1_filed"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2"
+            app:layout_constraintVertical_bias="0.029" />
+
+        <ImageView
             android:id="@+id/p1_card"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:padding="55dp"
             app:layout_constraintBottom_toBottomOf="@+id/p1_filed"
@@ -55,6 +67,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/p1_filed"
             app:srcCompat="@drawable/cardback" />
+
 
         <TextView
             android:id="@+id/p1_Tcard"
@@ -95,15 +108,27 @@
             tools:layout_editor_absoluteY="225dp" />
 
         <ImageView
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:src="@drawable/bell"
+            android:alpha="0.3"
+            app:layout_constraintBottom_toBottomOf="@+id/p2_filed"
+            app:layout_constraintEnd_toEndOf="@+id/p2_filed"
+            app:layout_constraintHorizontal_bias="0.017"
+            app:layout_constraintStart_toStartOf="@+id/p2_filed"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageView
             android:id="@+id/p2_card"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:onClick="onClick"
             android:padding="55dp"
             app:layout_constraintBottom_toBottomOf="@+id/p2_filed"
             app:layout_constraintEnd_toEndOf="@+id/p2_filed"
             app:layout_constraintStart_toStartOf="@+id/p2_filed"
             app:layout_constraintTop_toTopOf="@+id/p2_filed"
-            android:onClick="onClick"
             app:srcCompat="@drawable/cardback" />
 
         <TextView
