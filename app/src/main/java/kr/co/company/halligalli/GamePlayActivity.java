@@ -46,7 +46,10 @@ public class GamePlayActivity extends AppCompatActivity {
 
         MainHandler mHandler = new MainHandler();// 핸들러 사용
         BackgroundThread thread = new BackgroundThread(mHandler); //쓰레드 가져옴
+        ReHandler rhandler = new ReHandler(); // 카드 카운트를 위한 쓰레드 가져옴
+        CardCountThread countThread = new CardCountThread(rhandler); // 카드 카운트를 위한 쓰레드 가져옴
         thread.start();
+        countThread.start();
         // 카드 뒤집힐 때 애니메이션 효과를 위한 코드
         AlphaAnimation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(200);
@@ -74,19 +77,19 @@ public class GamePlayActivity extends AppCompatActivity {
                         newCard = player1.getCardcount();
                         p1_Tcard.setText(Integer.toString(newCard));
                     }else{  // 카드 카운트가 0이 될 경우
-                        AlertDialog.Builder builder = new AlertDialog.Builder(GamePlayActivity.this);
-                        builder.setTitle("player2 승리").setMessage("게임을 다시시작하세요");
-                        builder.setPositiveButton("재시작", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(getApplicationContext(), "재시작한다", Toast.LENGTH_SHORT).show();
-                                Intent intent = getIntent();
-                                finish();
-                                startActivity(intent);
-                            }
-                        });
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(GamePlayActivity.this);
+//                        builder.setTitle("player2 승리").setMessage("게임을 다시시작하세요");
+//                        builder.setPositiveButton("재시작", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                Toast.makeText(getApplicationContext(), "재시작한다", Toast.LENGTH_SHORT).show();
+//                                Intent intent = getIntent();
+//                                finish();
+//                                startActivity(intent);
+//                            }
+//                        });
+//                        AlertDialog alertDialog = builder.create();
+//                        alertDialog.show();
                         //
                         //
                         //
@@ -128,6 +131,19 @@ public class GamePlayActivity extends AppCompatActivity {
                         p2_Tcard.setText(Integer.toString(newCard));
 
                     }else{ //카드 카운트가 0이 될 경우
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(GamePlayActivity.this);
+//                        builder.setTitle("player2 승리").setMessage("게임을 다시시작하세요");
+//                        builder.setPositiveButton("재시작", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                Toast.makeText(getApplicationContext(), "재시작한다", Toast.LENGTH_SHORT).show();
+//                                Intent intent = getIntent();
+//                                finish();
+//                                startActivity(intent);
+//                            }
+//                        });
+//                        AlertDialog alertDialog = builder.create();
+//                        alertDialog.show();
                         //
                         //
                         //
@@ -143,7 +159,69 @@ public class GamePlayActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
+
+    class CardCountThread extends Thread{
+        Handler rhandler;
+        public CardCountThread(Handler handler){rhandler = handler;}
+        public void run(){
+            while(true){
+                // 이것도 쓰레드에서 처리를 해야하나?
+                if(player1.getCardcount() <= 0 || player2.getCardcount() <= 0){
+                    Message rmsg = new Message();
+                    rmsg.what = 1;
+                    rhandler.sendMessage(rmsg); //핸들러로 메시지를 보냄
+                }
+
+                try {
+                    Thread.sleep(200);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class ReHandler extends Handler{
+        boolean gameOver = false;
+        @Override
+        public void handleMessage(Message rmsg){
+            super.handleMessage(rmsg);
+            String winner;
+
+            if(player1.getCardcount() > player2.getCardcount()){
+                winner = "player1";
+            }else {
+                winner = "player2";
+            }
+
+            if(gameOver != true){
+                if(rmsg.what == 1){
+
+                    //이건 핸들러에서 처리를 해야할 듯?
+                    AlertDialog.Builder builder = new AlertDialog.Builder(GamePlayActivity.this);
+                    builder.setTitle(winner + "승리!").setMessage("게임을 다시시작하세요");
+                    builder.setPositiveButton("재시작", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(getApplicationContext(), "재시작한다", Toast.LENGTH_SHORT).show();
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.setCancelable(false);
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    alertDialog.show();
+                }
+                gameOver = true;
+            }
+        }
+    }
+
     // 쓰레드를 이용하여 카드 조건을 확인
     class BackgroundThread extends Thread{
         Handler mhandler;
@@ -207,11 +285,16 @@ public class GamePlayActivity extends AppCompatActivity {
 
     //핸들러를 통해서 데이터를 제어할 예정
     class MainHandler extends Handler{
+
         @Override
         public void handleMessage(Message msg){
             super.handleMessage(msg);
             int imageResource = getResources().getIdentifier("cardback",  // p1,p2_cardView 바꿀 이미지 세팅
                     "drawable", getPackageName());
+
+            // 카드 뒤집힐 때 애니메이션 효과를 위한 코드
+            AlphaAnimation animation = new AlphaAnimation(0.0f, 1.0f);
+            animation.setDuration(200);
 
             //조건
             if(msg.what == 1){
@@ -230,6 +313,7 @@ public class GamePlayActivity extends AppCompatActivity {
                         newCard = player1.sumCardcount(card.getField_card()); //플레이어 카드에 필드카드 추가
                         p1_Tcard.setText(Integer.toString(newCard)); // 플레이어 카드 카운트 업데이트
                         card.resetFieldCard(); // 필드 카드 초기화
+                        p1_bell.startAnimation(animation); //카드에 애니메이션 효과
 
                         // bell 투명도 조절
                         p1_bell.setAlpha(0.3f);
@@ -252,10 +336,13 @@ public class GamePlayActivity extends AppCompatActivity {
                         newCard = player2.sumCardcount(card.getField_card()); //플레이어 카드에 필드카드 추가
                         p2_Tcard.setText(Integer.toString(newCard)); // 플레이어 카드 카운트 업데이트
                         card.resetFieldCard(); // 필드카드 초기화
+                        p2_bell.startAnimation(animation); //카드에 애니메이션 효과
+
                         // bell 투명도 조절
                         p1_bell.setAlpha(0.3f);
                         p2_bell.setAlpha(0.3f);
                         msg.what = 0;
+
                         //View 활성화, bell 비활성화
                         p1_cardView.setEnabled(true);
                         p2_cardView.setEnabled(true);

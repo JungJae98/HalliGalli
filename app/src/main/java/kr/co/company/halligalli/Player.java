@@ -1,7 +1,7 @@
 package kr.co.company.halligalli;
 
 public class Player {
-    private int cardcount;
+    private int cardcount; //플레이어에게 세팅되는 카드 갯수
 
     public Player(int cardcount){ //플레이어의 카드 카운트 세팅
         this.cardcount = cardcount;
