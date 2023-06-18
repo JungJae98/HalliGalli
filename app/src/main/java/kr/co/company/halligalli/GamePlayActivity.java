@@ -179,12 +179,14 @@ public class GamePlayActivity extends AppCompatActivity {
 
                     //이건 핸들러에서 처리를 해야할 듯?
                     AlertDialog.Builder builder = new AlertDialog.Builder(GamePlayActivity.this);
-                    builder.setTitle(winner + "승리!").setMessage("게임을 다시시작하세요");
+                    builder.setTitle("승리!").setMessage("게임을 다시시작하세요");
                     builder.setPositiveButton("재시작", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Toast.makeText(getApplicationContext(), "재시작한다", Toast.LENGTH_SHORT).show();
-                            restartGame();
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
                         }
                     });
                     AlertDialog alertDialog = builder.create();
@@ -256,7 +258,7 @@ public class GamePlayActivity extends AppCompatActivity {
                     }
                 }
                 try{
-                    Thread.sleep(100);
+                    Thread.sleep(200);
                 } catch (Exception e){
                     e.printStackTrace();
                 }
