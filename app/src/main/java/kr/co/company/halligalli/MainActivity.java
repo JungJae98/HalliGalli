@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,15 +25,20 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements OnDataPassListener {
     int selectCardNum_M;
 
+    // 효과음을 사용하기위한 사운드 풇
+    private SoundPool soundPool;
+    private int soundId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        //프래그먼트를 사용하기 위해 가져옴
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction transaction = fragmentManager.beginTransaction();
-
+        // 사운드풀 설정
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(1)
+                .build();
+        soundId = soundPool.load(this, R.raw.btn_touch, 1);
 
         //게임을 플레이할 수 있는 곳으로 이동동//
        Button goGameBtn = (Button) findViewById(R.id.goGameBtn);
@@ -42,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnDataPassListene
                 Intent intent = new Intent(MainActivity.this, GamePlayActivity.class);
                 System.out.println(selectCardNum_M);
                 intent.putExtra("playCardNum", selectCardNum_M);
+                soundPool.play(soundId, 1f, 1f, 1, 0, 1f); //사운드 재생
                 startActivity(intent);
             }
         });
@@ -52,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnDataPassListene
             @Override
             public void onClick(View view) {
                 //프래그먼트를 사용하기 위해 가져옴
+                soundPool.play(soundId, 1f, 1f, 1, 0, 1f); //사운드 재생
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
 

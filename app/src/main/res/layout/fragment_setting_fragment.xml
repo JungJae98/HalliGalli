@@ -2,18 +2,20 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
-    android:layout_height="250dp"
+    android:layout_height="350dp"
     tools:context=".setting_fragment"
     android:background="@drawable/round_p1"
-    android:alpha="0.7">
+    android:alpha="0.7"
+    android:layout_gravity="center">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="20dp">
+        android:layout_margin="17dp">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="카드의 숫자를 설정하세요."
             android:textColor="#ff0000"
             android:textSize="20dp" />
@@ -21,8 +23,9 @@
 
         <RadioGroup
             android:id="@+id/radioGroup"
+            android:layout_weight="3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="0dp" >
 
             <RadioButton
                 android:id="@+id/radioButton20"
@@ -54,7 +57,8 @@
         </RadioGroup>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
             <Button
                 android:id="@+id/closeButton"

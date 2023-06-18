@@ -3,6 +3,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +26,9 @@ public class GamePlayActivity extends AppCompatActivity {
     ImageView p2_bell; //player2 벨
     int newCard; //카드 갯수 업데이트를 위한 임시 변수
     boolean messageSent = false; //핸들러 메시지 수신을 위한 불린형 변수
+    // 효과음을 사용하기위한 사운드 풇
+    private SoundPool soundPool;
+    private int soundId, dding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +39,14 @@ public class GamePlayActivity extends AppCompatActivity {
         p2_Tcard = (TextView) findViewById(R.id.p2_Tcard);
         p1_bell = (ImageView) findViewById(R.id.p1_bell);
         p2_bell = (ImageView) findViewById(R.id.p2_bell);
+
+        // 사운드풀 설정
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(1)
+                .build();
+        soundId = soundPool.load(this, R.raw.carddrow, 1);
+        dding = soundPool.load(this, R.raw.dding, 1);
+
         // 인스턴스로 받아온 카드로 카드 세팅
         setCardNum = getIntent().getIntExtra("playCardNum", 30);
         if(setCardNum == 0){
@@ -48,6 +60,7 @@ public class GamePlayActivity extends AppCompatActivity {
             p1_Tcard.setText(Integer.toString(setCardNum)); //세팅된 카드 카운팅 숫자를 출력
             p2_Tcard.setText(Integer.toString(setCardNum)); //세팅된 카드 카운팅 숫자를 출력
         }
+
 
 
 
@@ -76,6 +89,7 @@ public class GamePlayActivity extends AppCompatActivity {
                         p1_cardView.startAnimation(animation); //카드에 애니메이션 효과
                         p1_cardView.setAlpha(0.6f);
                         p2_cardView.setAlpha(1f);
+                        soundPool.play(soundId, 0.5f, 0.5f, 1, 0, 1f); //사운드 재생
                     }
                     player1.desCardcount(); //카드수 1 감소
                     card.addFieldCard(); // 필드 카드수 증가
@@ -127,6 +141,7 @@ public class GamePlayActivity extends AppCompatActivity {
                         p2_cardView.startAnimation(animation); //카드에 애니메이션 효과
                         p1_cardView.setAlpha(1f);
                         p2_cardView.setAlpha(0.6f);
+                        soundPool.play(soundId, 0.5f, 0.5f, 1, 0, 1f); //사운드 재생
                     }
                     player2.desCardcount(); //카드 수 1감소
                     card.addFieldCard(); // 필드 카드수 증가
@@ -318,6 +333,7 @@ public class GamePlayActivity extends AppCompatActivity {
                         p1_Tcard.setText(Integer.toString(newCard)); // 플레이어 카드 카운트 업데이트
                         card.resetFieldCard(); // 필드 카드 초기화
                         p1_bell.startAnimation(animation); //카드에 애니메이션 효과
+                        soundPool.play(dding, 1f, 1f, 1, 0, 1f); //사운드 재생
 
                         // bell 투명도 조절
                         p1_bell.setAlpha(0.3f);
@@ -339,6 +355,7 @@ public class GamePlayActivity extends AppCompatActivity {
                         p2_Tcard.setText(Integer.toString(newCard)); // 플레이어 카드 카운트 업데이트
                         card.resetFieldCard(); // 필드카드 초기화
                         p2_bell.startAnimation(animation); //카드에 애니메이션 효과
+                        soundPool.play(dding, 1f, 1f, 1, 0, 1f); //사운드 재생
 
                         // bell 투명도 조절
                         p1_bell.setAlpha(0.3f);
