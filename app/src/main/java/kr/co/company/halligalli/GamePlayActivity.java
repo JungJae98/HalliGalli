@@ -74,6 +74,8 @@ public class GamePlayActivity extends AppCompatActivity {
                         p1_cardView.setImageResource(imageResource); // 이미지를 변경
                         card.setCard1(cardFilp);
                         p1_cardView.startAnimation(animation); //카드에 애니메이션 효과
+                        p1_cardView.setAlpha(0.6f);
+                        p2_cardView.setAlpha(1f);
                     }
                     player1.desCardcount(); //카드수 1 감소
                     card.addFieldCard(); // 필드 카드수 증가
@@ -123,9 +125,12 @@ public class GamePlayActivity extends AppCompatActivity {
                         p2_cardView.setImageResource(imageResource); // 이미지를 변경
                         card.setCard2(cardFilp);
                         p2_cardView.startAnimation(animation); //카드에 애니메이션 효과
+                        p1_cardView.setAlpha(1f);
+                        p2_cardView.setAlpha(0.6f);
                     }
                     player2.desCardcount(); //카드 수 1감소
                     card.addFieldCard(); // 필드 카드수 증가
+
                     //카드 카운트가 0이 될 경우를 처리해야 함
                     if(player2.getCardcount() != 0){
                         //남은카드 텍스트 업데이트
@@ -209,9 +214,7 @@ public class GamePlayActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Toast.makeText(getApplicationContext(), "재시작한다", Toast.LENGTH_SHORT).show();
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
+                            restartGame();
                         }
                     });
                     AlertDialog alertDialog = builder.create();
@@ -222,6 +225,11 @@ public class GamePlayActivity extends AppCompatActivity {
                 gameOver = true;
             }
         }
+    }
+    private void restartGame(){
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
     // 쓰레드를 이용하여 카드 조건을 확인
