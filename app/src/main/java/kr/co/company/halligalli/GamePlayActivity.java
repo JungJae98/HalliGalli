@@ -3,7 +3,6 @@ package kr.co.company.halligalli;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +10,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class GamePlayActivity extends AppCompatActivity {
+
     int setCardNum = 10; //플레이어 카드카운트 세팅
     Game game = new Game();
     Player player1 = new Player(setCardNum); //기본 카드 숫자를 세팅
@@ -33,14 +30,10 @@ public class MainActivity extends AppCompatActivity {
     int newCard; //카드 갯수 업데이트를 위한 임시 변수
     boolean messageSent = false; //핸들러 메시지 수신을 위한 불린형 변수
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_game_play);
 
         p1_cardView = (ImageView) findViewById(R.id.p1_card);
         p2_cardView = (ImageView) findViewById(R.id.p2_card);
@@ -54,24 +47,6 @@ public class MainActivity extends AppCompatActivity {
         MainHandler mHandler = new MainHandler();// 핸들러 사용
         BackgroundThread thread = new BackgroundThread(mHandler); //쓰레드 가져옴
         thread.start();
-
-
-        //임시 이동 버튼 테스트//
-
-        Button button = (Button) findViewById(R.id.dlehd);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, GamePlayActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //임시 이동 버튼 테스트//
-
-
-
-
         // 카드 뒤집힐 때 애니메이션 효과를 위한 코드
         AlphaAnimation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(200);
@@ -99,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                         newCard = player1.getCardcount();
                         p1_Tcard.setText(Integer.toString(newCard));
                     }else{  // 카드 카운트가 0이 될 경우
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(GamePlayActivity.this);
                         builder.setTitle("player2 승리").setMessage("게임을 다시시작하세요");
                         builder.setPositiveButton("재시작", new DialogInterface.OnClickListener() {
                             @Override
@@ -169,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     // 쓰레드를 이용하여 카드 조건을 확인
     class BackgroundThread extends Thread{
         Handler mhandler;
@@ -256,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                         newCard = player1.sumCardcount(card.getField_card()); //플레이어 카드에 필드카드 추가
                         p1_Tcard.setText(Integer.toString(newCard)); // 플레이어 카드 카운트 업데이트
                         card.resetFieldCard(); // 필드 카드 초기화
-                        
+
                         // bell 투명도 조절
                         p1_bell.setAlpha(0.3f);
                         p2_bell.setAlpha(0.3f);
@@ -297,5 +271,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-}
 
+}
