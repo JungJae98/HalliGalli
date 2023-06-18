@@ -16,10 +16,10 @@ import android.widget.Toast;
 
 public class GamePlayActivity extends AppCompatActivity {
 
-    int setCardNum = 10; //플레이어 카드카운트 세팅
+    int setCardNum = 20; //플레이어 카드카운트 세팅
     Game game = new Game();
-    Player player1 = new Player(setCardNum); //기본 카드 숫자를 세팅
-    Player player2 = new Player(setCardNum);
+    Player player1; //기본 카드 숫자를 세팅
+    Player player2;
     Card card = new Card(); //카드 세팅과 저장할 곳
     ImageView p1_cardView; // 어떤 카드인지 띄워질 곳
     ImageView p2_cardView; //어떤 카드인지 띄워질 곳
@@ -41,8 +41,26 @@ public class GamePlayActivity extends AppCompatActivity {
         p2_Tcard = (TextView) findViewById(R.id.p2_Tcard);
         p1_bell = (ImageView) findViewById(R.id.p1_bell);
         p2_bell = (ImageView) findViewById(R.id.p2_bell);
-        p1_Tcard.setText(Integer.toString(setCardNum)); //세팅된 카드 카운팅 숫자를 출력
-        p2_Tcard.setText(Integer.toString(setCardNum)); //세팅된 카드 카운팅 숫자를 출력
+
+        // 인스턴스로 받아온 카드로 카드 세팅
+        setCardNum = getIntent().getIntExtra("playCardNum", 30);
+        if(setCardNum == 0){
+            player1 = new Player(30);
+            player2 = new Player(30);
+            p1_Tcard.setText(Integer.toString(30)); //세팅된 카드 카운팅 숫자를 출력
+            p2_Tcard.setText(Integer.toString(30)); //세팅된 카드 카운팅 숫자를 출력
+        } else {
+            player1 = new Player(setCardNum);
+            player2 = new Player(setCardNum);
+            p1_Tcard.setText(Integer.toString(setCardNum)); //세팅된 카드 카운팅 숫자를 출력
+            p2_Tcard.setText(Integer.toString(setCardNum)); //세팅된 카드 카운팅 숫자를 출력
+        }
+
+        System.out.println(setCardNum);
+
+
+
+
 
         MainHandler mHandler = new MainHandler();// 핸들러 사용
         BackgroundThread thread = new BackgroundThread(mHandler); //쓰레드 가져옴
@@ -69,39 +87,21 @@ public class GamePlayActivity extends AppCompatActivity {
                     }
                     player1.desCardcount(); //카드수 1 감소
                     card.addFieldCard(); // 필드 카드수 증가
+                    p1_cardView.setAlpha(0.6f);
+                    p2_cardView.setAlpha(1f);
 
 
                     //카드 카운트가 0이 될 경우를 처리해야함
-                    if(player1.getCardcount() != 0){
+                    if(player1.getCardcount() > 0){
                         // 남은카드 텍스트 업데이트
                         newCard = player1.getCardcount();
                         p1_Tcard.setText(Integer.toString(newCard));
-                    }else{  // 카드 카운트가 0이 될 경우
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(GamePlayActivity.this);
-//                        builder.setTitle("player2 승리").setMessage("게임을 다시시작하세요");
-//                        builder.setPositiveButton("재시작", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                Toast.makeText(getApplicationContext(), "재시작한다", Toast.LENGTH_SHORT).show();
-//                                Intent intent = getIntent();
-//                                finish();
-//                                startActivity(intent);
-//                            }
-//                        });
-//                        AlertDialog alertDialog = builder.create();
-//                        alertDialog.show();
-                        //
-                        //
-                        //
-                        // 게임 종료에 관한 코드 작성이 필요
-                        //
-                        //
-                        //
-                        //
                     }
+
                     p1_cardView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                     game.p1Turn(); // 턴전환
                     messageSent = false;
+
                 }
             }
         });
@@ -123,39 +123,22 @@ public class GamePlayActivity extends AppCompatActivity {
                     }
                     player2.desCardcount(); //카드 수 1감소
                     card.addFieldCard(); // 필드 카드수 증가
+                    p1_cardView.setAlpha(1f);
+                    p2_cardView.setAlpha(0.6f);
 
                     //카드 카운트가 0이 될 경우를 처리해야 함
-                    if(player2.getCardcount() != 0){
+                    if(player2.getCardcount() > 0){
                         //남은카드 텍스트 업데이트
                         newCard = player2.getCardcount();
                         p2_Tcard.setText(Integer.toString(newCard));
+                    }else{
 
-                    }else{ //카드 카운트가 0이 될 경우
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(GamePlayActivity.this);
-//                        builder.setTitle("player2 승리").setMessage("게임을 다시시작하세요");
-//                        builder.setPositiveButton("재시작", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                Toast.makeText(getApplicationContext(), "재시작한다", Toast.LENGTH_SHORT).show();
-//                                Intent intent = getIntent();
-//                                finish();
-//                                startActivity(intent);
-//                            }
-//                        });
-//                        AlertDialog alertDialog = builder.create();
-//                        alertDialog.show();
-                        //
-                        //
-                        //
-                        // 게임 종료에 관한 코드 작성이 필요
-                        //
-                        //
-                        //
-                        //
                     }
+
                     p2_cardView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                     game.p2Turn(); //플레이어 턴 전환
                     messageSent = false;
+
                 }
             }
         });
@@ -173,12 +156,6 @@ public class GamePlayActivity extends AppCompatActivity {
                     Message rmsg = new Message();
                     rmsg.what = 1;
                     rhandler.sendMessage(rmsg); //핸들러로 메시지를 보냄
-                }
-
-                try {
-                    Thread.sleep(200);
-                }catch (Exception e){
-                    e.printStackTrace();
                 }
             }
         }
@@ -207,9 +184,7 @@ public class GamePlayActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Toast.makeText(getApplicationContext(), "재시작한다", Toast.LENGTH_SHORT).show();
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
+                            restartGame();
                         }
                     });
                     AlertDialog alertDialog = builder.create();
@@ -220,6 +195,12 @@ public class GamePlayActivity extends AppCompatActivity {
                 gameOver = true;
             }
         }
+    }
+
+    private void restartGame(){
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
     // 쓰레드를 이용하여 카드 조건을 확인

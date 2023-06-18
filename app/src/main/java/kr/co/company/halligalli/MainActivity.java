@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnDataPassListene
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, GamePlayActivity.class);
+                System.out.println(selectCardNum_M);
                 intent.putExtra("playCardNum", selectCardNum_M);
                 startActivity(intent);
             }

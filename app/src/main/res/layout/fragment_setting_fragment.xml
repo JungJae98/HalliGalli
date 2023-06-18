@@ -28,24 +28,28 @@
                 android:id="@+id/radioButton20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="20" />
 
             <RadioButton
                 android:id="@+id/radioButton25"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="25" />
 
             <RadioButton
                 android:id="@+id/radioButton30"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="30" />
 
             <RadioButton
                 android:id="@+id/radioButton35"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="35" />
         </RadioGroup>
         <LinearLayout
